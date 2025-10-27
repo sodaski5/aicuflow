@@ -15,12 +15,12 @@ def run_node(node_id):
         os.makedirs('datasets', exist_ok=True)
         os.makedirs('models', exist_ok=True)
 
-        # --- EXTRACT NODE ---
+        # eXtRaCt NoDe
         if node.node_type == 'Extract':
             dataset_name = node.config.get('dataset', 'local')
 
             if dataset_name == 'local':
-                # Use local CSV for demo
+                # use local CSV for demo
                 local_csv = 'datasets/melb_data.csv'
                 if not os.path.exists(local_csv):
                     raise FileNotFoundError(
@@ -28,7 +28,7 @@ def run_node(node_id):
                     )
                 node.config['output'] = local_csv
             else:
-                # Kaggle download (requires valid kaggle.json)
+                # kaggle download (requires valid kaggle.json)
                 from kaggle.api.kaggle_api_extended import KaggleApi
                 api = KaggleApi()
                 api.authenticate()
@@ -42,20 +42,20 @@ def run_node(node_id):
 
             node.status = 'completed'
 
-        # --- TRANSFORM NODE ---
+        # tRaNsFoRm NoDe
         elif node.node_type == 'Transform':
             input_node = node.inputs.first()
             if not input_node or 'output' not in input_node.config:
                 raise ValueError("Transform Node missing input or input not completed")
             df = pd.read_csv(input_node.config['output'])
-            # simple cleaning: drop rows with missing values
+            # drop rows with missing values
             df = df.dropna()
             clean_csv = 'datasets/housing_clean.csv'
             df.to_csv(clean_csv, index=False)
             node.config['output'] = clean_csv
             node.status = 'completed'
 
-        # --- TRAIN NODE ---
+        # tRaIn NoDe
         elif node.node_type == 'Train':
             input_node = node.inputs.first()
             if not input_node or 'output' not in input_node.config:

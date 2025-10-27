@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Node
-from .tasks import run_node  # Celery task
+from .tasks import run_node  # celery task
 
 @admin.register(Node)
 class NodeAdmin(admin.ModelAdmin):
